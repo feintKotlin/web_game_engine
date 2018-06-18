@@ -1,72 +1,104 @@
-namespace feint{
-    export class Scene{
-        constructor(canvas:Canvas){
-            this._width=800
-            this._height=800
-            this._canvas=canvas
+namespace feint {
+    export class Scene extends Renderable {
+        constructor(canvas: Canvas) {
+            super()
+            this._width = document.documentElement.clientWidth
+            this._height = document.documentElement.clientHeight
+            this._canvas = canvas
+            this._canvas.resize(this.Size)
         }
-        private _width:number
-        private _height:number
-        _canvas:Canvas
-        _update:Function=function(){}
-        private _gameobjects:GameObject[]=[]
-        _render:Render=new Render(this)
+        private _width: number
+        private _height: number
+        private _canvas: Canvas
+        private _update: Function = function () { }
+        private _resize=function(size:Size){}
+        private _gameobjects: GameObject[] = []
+        private _gameObjectMap: Map = new Map()
+        private _render: Render = new Render(this)
+        private _backGround: string = ""
+        private _resourceManager: ResourceManager = new ResourceManager()
 
-        get GameObjects():GameObject[]{
+        get ResourceManager() {
+            return this._resourceManager
+        }
+
+        set BackGround(background: string) {
+            this._backGround = background
+        }
+
+
+        get BackGround(): string {
+            return this._backGround
+        }
+
+
+        get GameObjects(): GameObject[] {
             return this._gameobjects
         }
 
-        get Canvas():Canvas{
+        get Canvas(): Canvas {
             return this._canvas
         }
 
-        get Size():Size{
-            return new Size(this._width,this._height)
+        get Size(): Size {
+            return new Size(this._width, this._height)
         }
 
-        set Size(size:Size){
-            this._width=size.Width
-            this._height=size.Height
+        set Size(size: Size) {
+            this._width = size.Width
+            this._height = size.Height
         }
 
-        addGameObject(gameObject:GameObject){
+        resize(size: Size) {
+            this._width = size.Width
+            this._height = size.Height
+            this._canvas.resize(size)
+        }
+
+        addGameObject(gameObject: GameObject) {
             this._gameobjects.push(gameObject)
+            this._gameObjectMap.put(gameObject.Name, gameObject)
         }
-        removeGameObject(gameObject:GameObject){
-            this._gameobjects.splice(this._gameobjects.indexOf(gameObject),1)
-        }
-
-        clearGameObjects(){
-            this._gameobjects=[]
+        removeGameObject(gameObject: GameObject) {
+            this._gameobjects.splice(this._gameobjects.indexOf(gameObject), 1)
         }
 
-        find(name:string):GameObject|null{
-            var gameObject=null
-            for(var i=0;i<this._gameobjects.length;++i){
-                if(this._gameobjects[i].Name==name){
-                    gameObject=this._gameobjects[i]
-                }
-            }
-
-            return gameObject
-        }
-        onUpdate(event:Function){
-            this._update=event
+        clearGameObjects() {
+            this._gameobjects = []
+            this._gameObjectMap = new Map()
         }
 
-        run(){
+        find(name: string): GameObject | null {
+            if (this._gameObjectMap.get(name) != null)
+                return <GameObject>this._gameObjectMap.get(name)
+            else
+                return null
+        }
+        onUpdate(event: Function) {
+            this._update = event
+        }
+
+        onResize(event: (size:Size)=>void){
+            this._resize=event
+        }
+
+        run() {
             this.beforeStart()
-            setInterval(()=>{
+            setInterval(() => {
+                this._resize(new Size(
+                    document.documentElement.clientWidth,
+                    document.documentElement.clientHeight
+                ))
                 this._update()
                 this._render.render()
-            },100)
+            }, 100)
         }
 
-        private beforeStart(){
-            this._canvas.MouseDownEvent=(event:MouseEvent)=>{
-                var clickPos:Position=new Position(event.offsetX,event.offsetY)
-                this._gameobjects.forEach((gameobject)=>{
-                    if(isInArea(clickPos,gameobject.Bounding)){
+        private beforeStart() {
+            this._canvas.MouseDownEvent = (event: MouseEvent) => {
+                var clickPos: Position = new Position(event.offsetX, event.offsetY)
+                this._gameobjects.forEach((gameobject) => {
+                    if (isInArea(clickPos, gameobject.Bounding)) {
                         gameobject.mouseDown()
                     }
                 })
@@ -74,7 +106,11 @@ namespace feint{
 
             this._canvas.openListener()
         }
-        preview(){
+
+        private loadResource() {
+
+        }
+        preview() {
             this._render.render()
         }
     }

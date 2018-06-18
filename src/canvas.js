@@ -7,6 +7,17 @@ var feint;
             this._canvas = canvas;
             this._context = canvas.getContext("2d");
         }
+        Canvas.prototype.resize = function (size) {
+            this._canvas.width = size.Width;
+            this._canvas.height = size.Height;
+        };
+        Object.defineProperty(Canvas.prototype, "Canvas", {
+            get: function () {
+                return this._canvas;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(Canvas.prototype, "Width", {
             get: function () {
                 return this._canvas.width;
@@ -54,6 +65,19 @@ var feint;
             enumerable: true,
             configurable: true
         });
+        Canvas.prototype.drawImage = function (src, size, rederable) {
+            var _this = this;
+            var img = new Image(size.Width, size.Height);
+            img.src = src;
+            img.onload = function () {
+                _this._context.drawImage(img, 0, 0, size.Width, size.Height);
+                rederable.State = feint.RenderState.Rendered;
+            };
+        };
+        Canvas.prototype.drawImageWithCanvas = function (canvas, rederable) {
+            this._context.drawImage(canvas, 0, 0);
+            rederable.State = feint.RenderState.Rendered;
+        };
         Canvas.prototype.clear = function () {
             this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
         };

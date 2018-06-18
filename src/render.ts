@@ -1,36 +1,81 @@
-namespace feint{
-    export class Render{
-        constructor(scene:Scene){
-            this._scene=scene
+namespace feint {
+    export class Render {
+        constructor(scene: Scene) {
+            this._scene = scene
         }
 
-        _scene:Scene
+        _scene: Scene
 
-        render(){
+        render() {
             this._scene.Canvas.clear()
-            this.renderScene()
-            var gameObjects=this._scene.GameObjects
-            gameObjects.forEach((gameObject)=>{
-                this._scene.Canvas.FillStyle="#ffffff"
+            if(this._scene.State==RenderState.NoRender)
+                this.renderScene()
+            this.renderObjects()
+
+            if(this._scene.State==RenderState.Rendered)
+                this._scene.State=RenderState.NoRender
+        }
+
+        private renderObjects(){
+            var gameObjects = this._scene.GameObjects
+            gameObjects.forEach((gameObject) => {
+                this._scene.Canvas.FillStyle = "#ffffff"
                 this.renderObject(gameObject)
             })
         }
 
-        private renderObject(gameObject:GameObject){
+        private renderObject(gameObject: GameObject) {
             //console.log("update gameobject:["+gameObject.Name+"]")
 
             // 渲染边框线，在DEBUG模式下开启
-            this._scene.Canvas.StrokeStyle="#00ff00"
+            this._scene.Canvas.StrokeStyle = "#00ff00"
             this._scene.Canvas.strokeRect(gameObject.Bounding)
 
             // 渲染游戏物件的实际图像
             gameObject.draw(this._scene.Canvas)
         }
 
-        private renderScene(){
-            this._scene.Canvas.FillStyle="#000"
-            this._scene.Canvas.fillRect(new Rect(0,0,
-                this._scene.Size.Width,this._scene.Size.Height))
+
+        private renderScene() {
+            this._scene.State=RenderState.Rendering
+            if (Color.isColor( this._scene.BackGround)){
+                this._scene.Canvas.FillStyle = this._scene.BackGround
+                this._scene.Canvas.fillRect(new Rect(0, 0,
+                    this._scene.Size.Width, this._scene.Size.Height))
+                this._scene.State=RenderState.Rendered
+            }else{
+                this._scene.Canvas.drawImageWithCanvas(
+                    (<ImageResource>this._scene.ResourceManager.find(this._scene.Name)).Canvas.Canvas,this._scene)
+            }
+        }
+    }
+
+    export enum RenderState{
+        NoRender=10,Rendering=20,Rendered=30
+    }
+
+    export class Nameable{
+        private _name:string="untitle"
+
+        set Name(name:string){
+            this._name=name
+        }
+
+        get Name():string{
+            return this._name
+        }
+
+    }
+
+    export class Renderable extends Nameable{
+        private _state:RenderState=RenderState.NoRender
+
+        set State(state:RenderState){
+            this._state=state
+        }
+
+        get State():RenderState{
+            return this._state
         }
     }
 }

@@ -1,54 +1,80 @@
-namespace feint{
-    export class Canvas{
-        constructor(canvas:HTMLCanvasElement) {
-            this._canvas=canvas
-            this._context=<CanvasRenderingContext2D>canvas.getContext("2d")
+namespace feint {
+    export class Canvas {
+        constructor(canvas: HTMLCanvasElement) {
+            this._canvas = canvas
+            this._context = <CanvasRenderingContext2D>canvas.getContext("2d")
         }
-        private _canvas:HTMLCanvasElement
-        private _context:CanvasRenderingContext2D
-        private _mouseDownEvent=function(event:MouseEvent){}
+        private _canvas: HTMLCanvasElement
+        private _context: CanvasRenderingContext2D
+        private _mouseDownEvent = function (event: MouseEvent) { }
 
-        set Width(width:number){
-            this._canvas.width=width
+        resize(size: Size) {
+            this._canvas.width = size.Width
+            this._canvas.height = size.Height
         }
-        get Width():number{
+
+        get Canvas():HTMLCanvasElement{
+            return this._canvas
+        }
+
+        set Width(width: number) {
+            this._canvas.width = width
+        }
+        get Width(): number {
             return this._canvas.width
         }
 
-        set Height(height:number){
-            this._canvas.height=height
+        set Height(height: number) {
+            this._canvas.height = height
         }
 
-        get Height():number{
+        get Height(): number {
             return this._canvas.height
         }
 
-        set FillStyle(style:string){
-            this._context.fillStyle=style
+        set FillStyle(style: string) {
+            this._context.fillStyle = style
         }
 
-        set MouseDownEvent(event:(event:MouseEvent)=>void){
-            this._mouseDownEvent=event
+        set MouseDownEvent(event: (event: MouseEvent) => void) {
+            this._mouseDownEvent = event
         }
 
-        fillRect(rect:Rect){
-            this._context.fillRect(rect.X,rect.Y,rect.Width,rect.Height)
+        fillRect(rect: Rect) {
+            this._context.fillRect(rect.X, rect.Y, rect.Width, rect.Height)
         }
 
-        strokeRect(rect:Rect){
-            this._context.strokeRect(rect.X,rect.Y,rect.Width,rect.Height)
+        strokeRect(rect: Rect) {
+            this._context.strokeRect(rect.X, rect.Y, rect.Width, rect.Height)
         }
 
-        set StrokeStyle(style:string){
-            this._context.strokeStyle=style
+        set StrokeStyle(style: string) {
+            this._context.strokeStyle = style
         }
 
-        clear(){
-            this._context.clearRect(0,0,this._canvas.width,this._canvas.height)
+        drawImage(src: string, size: Size, rederable: Renderable) {
+            var img = new Image(size.Width, size.Height)
+            img.src = src
+            
+            img.onload = () => {
+                this._context.drawImage(img, 0, 0,size.Width,size.Height)
+                rederable.State = RenderState.Rendered
+            }
         }
 
-        openListener(){
-            this._canvas.onmousedown=(event)=>{
+        drawImageWithCanvas(canvas:HTMLCanvasElement, rederable: Renderable){
+            this._context.drawImage(canvas,0,0)
+            rederable.State=RenderState.Rendered
+        }
+
+
+
+        clear() {
+            this._context.clearRect(0, 0, this._canvas.width, this._canvas.height)
+        }
+
+        openListener() {
+            this._canvas.onmousedown = (event) => {
                 this._mouseDownEvent(event)
             }
         }

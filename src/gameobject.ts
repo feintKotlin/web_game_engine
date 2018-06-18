@@ -1,21 +1,30 @@
 namespace feint{
-    export abstract class GameObject{
-        constructor(name:String,bounding:Rect){
+
+    export abstract class GameObject extends Renderable{
+        constructor(name:string,bounding:Rect){
+            super()
             this._position=new Position(bounding.X,bounding.Y)
             this._size=new Size(bounding.Width,bounding.Height)
             this._bounding=bounding
-            this._name=name
+            this.Name=name
         }
 
         private _position:Position
         private _size:Size
         private _bounding:Rect
-        private _name:String
+        // layer的值越大，则物体越靠前。游戏物体的Layer的最小值为1
+        private _layer:Number=1
+
+
+
+
         private _keyDownEvent:Function=function(){}
         private _keyUpEvent:Function=function(){}
         private _keyDownEventMap:{"keyCode":Number,"event":Function}[]=[]
         private _keyUpEventMap:{"keyCode":Number,"event":Function}[]=[]
         private _mouseDownEvent:Function=function(){}
+
+        
 
         set Position(position:Position){
             this._position=position
@@ -29,10 +38,6 @@ namespace feint{
 
         get Bounding():Rect{
             return this._bounding
-        }
-
-        get Name():String{
-            return this._name
         }
 
         onKeyDown(keyCode:Number,event:Function){
@@ -98,5 +103,6 @@ namespace feint{
             canvas.fillRect(this.Bounding)
         }
     }
+   
 }
 

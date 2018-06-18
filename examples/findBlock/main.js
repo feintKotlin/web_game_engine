@@ -2,14 +2,15 @@
 var feint;
 (function (feint) {
     var c = document.getElementById("world");
-    c.width = document.body.clientWidth;
-    c.height = document.body.clientHeight;
     var scene = new feint.Scene(new feint.Canvas(c));
-    scene.Size = new feint.Size(c.width, c.width);
+    scene.Name = "bg";
+    scene.ResourceManager.save(new feint.ImageResource("bg", "../../img/bg.jpg", scene.Size));
     function levelScene(level, scene) {
+        var padding = 200;
         scene.clearGameObjects();
         var cols = Math.pow(2, Math.ceil(level / 5));
-        var rectWidth = scene.Size.Width / cols;
+        var line = scene.Size.Width > scene.Size.Height ? scene.Size.Height : scene.Size.Width;
+        var rectWidth = (line - padding) / cols;
         var delta = (15 - 3 * ((level - 1) % 5));
         var r = Math.random() * (255 - delta);
         var g = Math.random() * (255 - delta);
@@ -20,12 +21,12 @@ var feint;
         var answer = Math.floor(Math.random() * (cols * cols));
         for (var i = 0; i < cols; ++i) {
             for (var j = 0; j < cols; ++j) {
-                var rect = new feint.Rectangle("rect_" + String(i * cols + j), new feint.Rect(j * rectWidth, i * rectWidth, rectWidth, rectWidth));
+                var rect = new feint.Rectangle("rect_" + String(i * cols + j), new feint.Rect(padding / 2 + j * rectWidth, padding / 2 + i * rectWidth, rectWidth, rectWidth));
                 if (i * cols + j == answer) {
-                    rect.FillColor = feint.Color.rgb(r_del, g_del, b_del);
+                    rect.FillColor = feint.Color.rgba(r_del, g_del, b_del, 0.9);
                 }
                 else
-                    rect.FillColor = feint.Color.rgb(r, g, b);
+                    rect.FillColor = feint.Color.rgba(r, g, b, 0.9);
                 scene.addGameObject(rect);
             }
         }

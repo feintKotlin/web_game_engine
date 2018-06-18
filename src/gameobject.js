@@ -11,17 +11,22 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var feint;
 (function (feint) {
-    var GameObject = /** @class */ (function () {
+    var GameObject = /** @class */ (function (_super) {
+        __extends(GameObject, _super);
         function GameObject(name, bounding) {
-            this._keyDownEvent = function () { };
-            this._keyUpEvent = function () { };
-            this._keyDownEventMap = [];
-            this._keyUpEventMap = [];
-            this._mouseDownEvent = function () { };
-            this._position = new feint.Position(bounding.X, bounding.Y);
-            this._size = new feint.Size(bounding.Width, bounding.Height);
-            this._bounding = bounding;
-            this._name = name;
+            var _this = _super.call(this) || this;
+            // layer的值越大，则物体越靠前。游戏物体的Layer的最小值为1
+            _this._layer = 1;
+            _this._keyDownEvent = function () { };
+            _this._keyUpEvent = function () { };
+            _this._keyDownEventMap = [];
+            _this._keyUpEventMap = [];
+            _this._mouseDownEvent = function () { };
+            _this._position = new feint.Position(bounding.X, bounding.Y);
+            _this._size = new feint.Size(bounding.Width, bounding.Height);
+            _this._bounding = bounding;
+            _this.Name = name;
+            return _this;
         }
         Object.defineProperty(GameObject.prototype, "Position", {
             get: function () {
@@ -38,13 +43,6 @@ var feint;
         Object.defineProperty(GameObject.prototype, "Bounding", {
             get: function () {
                 return this._bounding;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(GameObject.prototype, "Name", {
-            get: function () {
-                return this._name;
             },
             enumerable: true,
             configurable: true
@@ -80,7 +78,7 @@ var feint;
             return event;
         };
         return GameObject;
-    }());
+    }(feint.Renderable));
     feint.GameObject = GameObject;
     var BaseShape = /** @class */ (function (_super) {
         __extends(BaseShape, _super);
