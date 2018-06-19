@@ -21,20 +21,12 @@ var feint;
             _this._gameObjectMap = new feint.Map();
             _this._render = new feint.Render(_this);
             _this._backGround = "";
-            _this._resourceManager = new feint.ResourceManager();
             _this._width = document.documentElement.clientWidth;
             _this._height = document.documentElement.clientHeight;
             _this._canvas = canvas;
             _this._canvas.resize(_this.Size);
             return _this;
         }
-        Object.defineProperty(Scene.prototype, "ResourceManager", {
-            get: function () {
-                return this._resourceManager;
-            },
-            enumerable: true,
-            configurable: true
-        });
         Object.defineProperty(Scene.prototype, "BackGround", {
             get: function () {
                 return this._backGround;
@@ -113,7 +105,7 @@ var feint;
                 var clickPos = new feint.Position(event.offsetX, event.offsetY);
                 _this._gameobjects.forEach(function (gameobject) {
                     if (feint.isInArea(clickPos, gameobject.Bounding)) {
-                        gameobject.mouseDown();
+                        gameobject.mouseDown(new feint.Position(clickPos.X - gameobject.Bounding.X, clickPos.Y - gameobject.Bounding.Y));
                     }
                 });
             };

@@ -27,15 +27,16 @@ var feint;
             var _this = this;
             var gameObjects = this._scene.GameObjects;
             gameObjects.forEach(function (gameObject) {
-                _this._scene.Canvas.FillStyle = "#ffffff";
                 _this.renderObject(gameObject);
             });
         };
         Render.prototype.renderObject = function (gameObject) {
             //console.log("update gameobject:["+gameObject.Name+"]")
-            // 渲染边框线，在DEBUG模式下开启
-            this._scene.Canvas.StrokeStyle = "#00ff00";
-            this._scene.Canvas.strokeRect(gameObject.Bounding);
+            if (feint.DEBUG) {
+                // 渲染边框线，在DEBUG模式下开启
+                this._scene.Canvas.StrokeStyle = "#00ff00";
+                this._scene.Canvas.strokeRect(gameObject.Bounding);
+            }
             // 渲染游戏物件的实际图像
             gameObject.draw(this._scene.Canvas);
         };
@@ -47,7 +48,7 @@ var feint;
                 this._scene.State = RenderState.Rendered;
             }
             else {
-                this._scene.Canvas.drawImageWithCanvas(this._scene.ResourceManager.find(this._scene.Name).Canvas.Canvas, this._scene);
+                this._scene.Canvas.drawImageWithCanvas(feint.resourceManager.find(this._scene.BackGround).Canvas.Canvas, new feint.Rect(0, 0, this._scene.Size.Width, this._scene.Size.Height), this._scene);
             }
         };
         return Render;
@@ -59,9 +60,12 @@ var feint;
         RenderState[RenderState["Rendering"] = 20] = "Rendering";
         RenderState[RenderState["Rendered"] = 30] = "Rendered";
     })(RenderState = feint.RenderState || (feint.RenderState = {}));
-    var Nameable = /** @class */ (function () {
+    var Nameable = /** @class */ (function (_super) {
+        __extends(Nameable, _super);
         function Nameable() {
-            this._name = "untitle";
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this._name = "untitle";
+            return _this;
         }
         Object.defineProperty(Nameable.prototype, "Name", {
             get: function () {
@@ -74,7 +78,7 @@ var feint;
             configurable: true
         });
         return Nameable;
-    }());
+    }(feint.Object));
     feint.Nameable = Nameable;
     var Renderable = /** @class */ (function (_super) {
         __extends(Renderable, _super);

@@ -17,6 +17,23 @@ namespace feint{
         }
     }
 
+    export class Object{
+        clone():Object{
+            return new Object()
+        }
+
+        toString():string{
+            return ""
+        }
+
+        equals(obj:Object):Boolean{
+            return false
+        }
+
+        hashcode():number{
+            return 0
+        }
+    }
     export class Map{
         private _capacity=16
         private _pairList:Renderable[][]=[]

@@ -62,8 +62,8 @@ namespace feint {
             }
         }
 
-        drawImageWithCanvas(canvas:HTMLCanvasElement, rederable: Renderable){
-            this._context.drawImage(canvas,0,0)
+        drawImageWithCanvas(canvas:HTMLCanvasElement,rect:Rect, rederable: Renderable){
+            this._context.drawImage(canvas,rect.X,rect.Y,rect.Width,rect.Height)
             rederable.State=RenderState.Rendered
         }
 

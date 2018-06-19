@@ -2,8 +2,9 @@ namespace feint{
     export class Transform{
 
     }
-    export class Position{
+    export class Position extends Object{
         constructor(x:number,y:number) {
+            super()
             this._x=x
             this._y=y
         }
@@ -26,6 +27,14 @@ namespace feint{
         get Y():number{
             return this._y
         }
+
+        equals(pos:Position):Boolean{
+            return this._x==pos.X&&this._y==pos.Y
+        }
+        clone():Position{
+            return new Position(this._x,this._y)
+        }
+       
     }
 
     export class Size{

@@ -21,7 +21,7 @@ var feint;
             _this._keyUpEvent = function () { };
             _this._keyDownEventMap = [];
             _this._keyUpEventMap = [];
-            _this._mouseDownEvent = function () { };
+            _this._mouseDownEvent = function (pos) { };
             _this._position = new feint.Position(bounding.X, bounding.Y);
             _this._size = new feint.Size(bounding.Width, bounding.Height);
             _this._bounding = bounding;
@@ -56,8 +56,8 @@ var feint;
         GameObject.prototype.onMouseDown = function (event) {
             this._mouseDownEvent = event;
         };
-        GameObject.prototype.mouseDown = function () {
-            this._mouseDownEvent(this);
+        GameObject.prototype.mouseDown = function (position) {
+            this._mouseDownEvent(position);
         };
         GameObject.prototype.getKeyDownEvent = function (keyCode) {
             var event = function () { };
@@ -80,6 +80,19 @@ var feint;
         return GameObject;
     }(feint.Renderable));
     feint.GameObject = GameObject;
+    var Sprite = /** @class */ (function (_super) {
+        __extends(Sprite, _super);
+        function Sprite(img, name, bounding) {
+            var _this = _super.call(this, name, bounding) || this;
+            _this._img = img;
+            return _this;
+        }
+        Sprite.prototype.draw = function (canvas) {
+            canvas.drawImageWithCanvas(feint.resourceManager.find(this._img).Canvas.Canvas, this.Bounding, this);
+        };
+        return Sprite;
+    }(GameObject));
+    feint.Sprite = Sprite;
     var BaseShape = /** @class */ (function (_super) {
         __extends(BaseShape, _super);
         function BaseShape() {

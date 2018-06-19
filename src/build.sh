@@ -1,0 +1,1 @@
+uglifyjs util.js transform.js render.js canvas.js  gameobject.js resource.js scene.js global.js -o webeng.min.js

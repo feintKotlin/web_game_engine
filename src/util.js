@@ -20,6 +20,24 @@ var feint;
         }
         Color.isColor = isColor;
     })(Color = feint.Color || (feint.Color = {}));
+    var Object = /** @class */ (function () {
+        function Object() {
+        }
+        Object.prototype.clone = function () {
+            return new Object();
+        };
+        Object.prototype.toString = function () {
+            return "";
+        };
+        Object.prototype.equals = function (obj) {
+            return false;
+        };
+        Object.prototype.hashcode = function () {
+            return 0;
+        };
+        return Object;
+    }());
+    feint.Object = Object;
     var Map = /** @class */ (function () {
         function Map() {
             this._capacity = 16;

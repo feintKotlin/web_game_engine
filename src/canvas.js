@@ -74,8 +74,8 @@ var feint;
                 rederable.State = feint.RenderState.Rendered;
             };
         };
-        Canvas.prototype.drawImageWithCanvas = function (canvas, rederable) {
-            this._context.drawImage(canvas, 0, 0);
+        Canvas.prototype.drawImageWithCanvas = function (canvas, rect, rederable) {
+            this._context.drawImage(canvas, rect.X, rect.Y, rect.Width, rect.Height);
             rederable.State = feint.RenderState.Rendered;
         };
         Canvas.prototype.clear = function () {

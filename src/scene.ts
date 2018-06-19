@@ -11,16 +11,12 @@ namespace feint {
         private _height: number
         private _canvas: Canvas
         private _update: Function = function () { }
-        private _resize=function(size:Size){}
+        private _resize = function (size: Size) { }
         private _gameobjects: GameObject[] = []
         private _gameObjectMap: Map = new Map()
         private _render: Render = new Render(this)
         private _backGround: string = ""
-        private _resourceManager: ResourceManager = new ResourceManager()
 
-        get ResourceManager() {
-            return this._resourceManager
-        }
 
         set BackGround(background: string) {
             this._backGround = background
@@ -78,8 +74,8 @@ namespace feint {
             this._update = event
         }
 
-        onResize(event: (size:Size)=>void){
-            this._resize=event
+        onResize(event: (size: Size) => void) {
+            this._resize = event
         }
 
         run() {
@@ -99,7 +95,8 @@ namespace feint {
                 var clickPos: Position = new Position(event.offsetX, event.offsetY)
                 this._gameobjects.forEach((gameobject) => {
                     if (isInArea(clickPos, gameobject.Bounding)) {
-                        gameobject.mouseDown()
+                        gameobject.mouseDown(new Position(clickPos.X - gameobject.Bounding.X,
+                            clickPos.Y - gameobject.Bounding.Y))
                     }
                 })
             }

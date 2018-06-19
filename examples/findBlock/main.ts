@@ -4,7 +4,7 @@ namespace feint {
 
     var scene = new Scene(new feint.Canvas(c))
     scene.Name="bg"
-    scene.ResourceManager.save(new ImageResource("bg","../../img/bg.jpg",scene.Size))
+    resourceManager.save(new ImageResource("bg","../../img/bg.jpg",scene.Size))
 
     function levelScene(level:number,scene:Scene):number{
         var padding=200
@@ -12,7 +12,7 @@ namespace feint {
         var cols=Math.pow(2,Math.ceil(level/5))
         var line=scene.Size.Width>scene.Size.Height?scene.Size.Height:scene.Size.Width
         var rectWidth=(line-padding)/cols
-        var delta=(15-3*((level-1)%5))
+        var delta=(18-3*((level-1)%5))
         var r=Math.random()*(255-delta)
         var g=Math.random()*(255-delta)
         var b=Math.random()*(255-delta)
@@ -26,13 +26,13 @@ namespace feint {
         for(var i=0;i<cols;++i){
             for(var j=0;j<cols;++j){
                 var rect=new Rectangle("rect_"+String(i*cols+j),new Rect(
-                    padding/2+j*rectWidth,padding/2+i*rectWidth,rectWidth,rectWidth)
+                    padding/2+j*rectWidth+(j-1)*5,padding/2+i*rectWidth+(i-1)*5,rectWidth,rectWidth)
                 )
             
                 if(i*cols+j==answer){
-                    rect.FillColor=Color.rgba(r_del,g_del,b_del,0.9)
+                    rect.FillColor=Color.rgba(r_del,g_del,b_del,0.98)
                 }else
-                    rect.FillColor=Color.rgba(r,g,b,0.9)
+                    rect.FillColor=Color.rgba(r,g,b,0.98)
                 scene.addGameObject(rect) 
             }
         }
